@@ -67,10 +67,10 @@ def stream_rgb_img() -> None:
             # Save the image by pressing s
             elif key == ord("s"):
                 file_number = 0
-                file_path = f"robot_vision_result/rbg_img_by_stream_{file_number:02d}.png"
+                file_path = f"robot_vision_result/rgb_img_by_stream_{file_number:02d}.png"
                 while os.path.exists(file_path):
                     file_number += 1
-                    file_path = f"robot_vision_result/rbg_img_by_stream_{file_number:02d}.png"
+                    file_path = f"robot_vision_result/rgb_img_by_stream_{file_number:02d}.png"
                 cv2.imwrite(file_path, rgb_img)
                 print(f"Saved: {file_path}")
         
