@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 def mouse_event_handler(event, x, y, flags, param):
     """
@@ -33,6 +34,40 @@ def img_mouse_click_xy(img_path):
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+def rawdepth_to_heatmap(rawdepth):
+    gray_img = cv2.normalize(rawdepth, None, 0,255, cv2.NORM_MINMAX).astype(np.uint8)
+    heatmap = cv2.applyColorMap(255 - gray_img, cv2.COLORMAP_TURBO)
+    # heatmap = cv2.applyColorMap(255 - gray_img, cv2.COLORMAP_JET)
+    return heatmap
+
+def crop_by_4_points(img, points):
+    """
+    Crop the image by 4 input points
+
+    :param img: Original image (H, W, 3)
+    :param points: Four points [(x1, y1), (x2, y2), (x3, y3), (x4, y4)], Note: x = horizontal axis (column), y = vertical axis (row)
+    :return: Cropped image (H, W, 3)
+    """
+    pts = np.array(points, dtype=np.int32)
+
+    # Compute the bounding box from the 4 points
+    x_min = np.min(pts[:, 0])
+    x_max = np.max(pts[:, 0])
+    y_min = np.min(pts[:, 1])
+    y_max = np.max(pts[:, 1])
+
+    # Boundary check to ensure valid crop range
+    h, w = img.shape[:2]
+    x_min = max(0, x_min)
+    y_min = max(0, y_min)
+    x_max = min(w - 1, x_max)
+    y_max = min(h - 1, y_max)
+
+    # OpenCV indexing: img[row, col] = img[y, x]
+    cropped_img = img[y_min:y_max, x_min:x_max]
+
+    return cropped_img
 
 if __name__ == "__main__":
     img_mouse_click_xy(img_path="D:/overlay_heatmap.png")
