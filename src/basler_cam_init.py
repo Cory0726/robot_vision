@@ -16,11 +16,8 @@ def create_basler_cam(serial_number: str) -> pylon.InstantCamera:
     """
     Create a Basler camera instance by serial number.
 
-    Args:
-        serial_number (str): Basler camera's serial number.
-
-    Returns:
-        pylon.InstantCamera: Basler camera instance
+    :param serial_number: (str), Basler camera serial number.
+    :return: (pylon.InstantCamera) Basler camera instance.
     """
     # Get the transport layer factory
     tl_factory = pylon.TlFactory.GetInstance()

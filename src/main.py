@@ -17,7 +17,7 @@ if __name__ == '__main__':
     )
 
     cv2.imshow("overlay_heatmap", overlay_heatmap)
-    cv2.imshow("overlay_edges", overlay_edges)
+    cv2.imwrite("overlay_heatmap.png", overlay_heatmap)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 

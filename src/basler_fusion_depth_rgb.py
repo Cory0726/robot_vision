@@ -1,9 +1,6 @@
 import cv2
 import numpy as np
 
-import basler_rgb_cam_grab
-import basler_tof_cam_grab
-
 def load_cam_calibration_file():
     """
     Load intrinsic/extrinsic matrices from the calibration XML.

@@ -3,7 +3,6 @@ from pypylon import pylon
 import cv2
 import basler_cam_init
 import numpy as np
-from pathlib import Path
 
 def create_rgb_cam_obj():
     """
