@@ -26,7 +26,7 @@ def main():
             rgb_img = cv2.cvtColor(bayer_image, cv2.COLOR_BAYER_BG2RGB)
             cv2.imshow("RGB", rgb_img)
 
-            # Read the keyboard keyin
+            # Read the keyboard key in
             key = cv2.waitKey(5) & 0xFF
             # Break the loop by pressing q
             if key == ord("q"):
@@ -36,7 +36,7 @@ def main():
                 # Crop the RGB image
                 color_img = tools.crop_by_4_points(
                     arr=rgb_img,
-                    points=[(81,258), (1105, 258), (81, 834), (1105, 834)]
+                    points=[(115, 185), (1075, 185), (115, 905), (1075, 905)]
                 )
                 # Get the depth image based on RGB image frame
                 pcl = basler_tof_cam_grab.grab_one_point_cloud()
@@ -44,29 +44,36 @@ def main():
                 raw_depth, _ = trans_3d_to_rgb_frame.project_depth_to_color_frame(pcl_color_frame, rgb_img)
                 raw_depth = tools.crop_by_4_points(
                     arr=raw_depth,
-                    points=[(81, 258), (1105, 258), (81, 834), (1105, 834)]
+                    points=[(115, 185), (1075, 185), (115, 905), (1075, 905)]
                 )
                 # Heatmap of depth
                 depth_heatmap = tools.rawdepth_to_heatmap(raw_depth)
                 # Overlay the color image and depth heatmap
-                overlay_heatmap, _ = tools.visualize_rgb_depth_alignment(color_img, raw_depth)
+                overlay_heatmap, _ = tools.visualize_rgb_depth_alignment(color_img, depth_heatmap)
 
                 # Save the files
-                dir_number = 0
-                dir_path = f"E:/temp/"
+                file_number = 0
+                file_path = f"robot_vision_result/Num{file_number:02d}_rgb.png"
+                while os.path.exists(file_path):
+                    file_number += 1
+                    file_path = f"robot_vision_result/Num{file_number:02d}_rgb.png"
+                cv2.imwrite(file_path, color_img)
+                cv2.imwrite(f"robot_vision_result/Num{file_number:02d}_raw_depth.png", raw_depth)
+                np.save(f"robot_vision_result/Num{file_number:02d}_raw_depth", raw_depth)
+                cv2.imwrite(f"robot_vision_result/Num{file_number:02d}_depth_heatmap.png", depth_heatmap)
+                cv2.imwrite(f"robot_vision_result/Num{file_number:02d}_overlay_heatmap.png", overlay_heatmap)
 
-                cv2.imwrite(dir_path + "rgb.png", color_img)
-                cv2.imwrite(dir_path + "raw_depth.png", raw_depth)
-                # np.save(dir_path + "raw_depth.npy", raw_depth)
-                cv2.imwrite(dir_path + "depth_heatmap.png", depth_heatmap)
-                cv2.imwrite(dir_path + "overlay_depth.png", overlay_heatmap)
-
-                print(f"Saved: {dir_path}")
+                print(f"Saved: {file_path}")
+                print(f"Saved: robot_vision_result/Num{file_number:02d}_raw_depth.png")
+                print(f"Saved: robot_vision_result/Num{file_number:02d}_raw_depth.npy")
+                print(f"Saved: robot_vision_result/Num{file_number:02d}_depth_heatmap.png")
+                print(f"Saved: robot_vision_result/Num{file_number:02d}_overlay_heatmap.png")
 
             grab_retrieve.Release()
     cam.StopGrabbing()
     cam.Close()
     cv2.destroyAllWindows
+
 
 if __name__ == '__main__':
     main()
