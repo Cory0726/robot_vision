@@ -41,7 +41,7 @@ def main():
                 # Get the depth image based on RGB image frame
                 pcl = basler_tof_cam_grab.grab_one_point_cloud()
                 pcl_color_frame = trans_3d_to_rgb_frame.transform_pcl_to_color_frame(pcl)
-                raw_depth, _ = trans_3d_to_rgb_frame.project_depth_to_color_frame(pcl_color_frame, color_img)
+                raw_depth, _ = trans_3d_to_rgb_frame.project_depth_to_color_frame(pcl_color_frame, rgb_img)
                 raw_depth = tools.crop_by_4_points(
                     arr=raw_depth,
                     points=[(81, 258), (1105, 258), (81, 834), (1105, 834)]
@@ -49,18 +49,15 @@ def main():
                 # Heatmap of depth
                 depth_heatmap = tools.rawdepth_to_heatmap(raw_depth)
                 # Overlay the color image and depth heatmap
-                overlay_heatmap, _ =tools.visualize_rgb_depth_alignment(color_img, depth_heatmap)
+                overlay_heatmap, _ = tools.visualize_rgb_depth_alignment(color_img, raw_depth)
 
                 # Save the files
                 dir_number = 0
-                dir_path = f"robot_vision_result/fusion_data_{dir_number:02d}/"
-                while os.path.exists(dir_path):
-                    dir_number += 1
-                    dir_path = f"robot_vision_result/fusion_data_{dir_number:02d}/"
+                dir_path = f"E:/temp/"
 
                 cv2.imwrite(dir_path + "rgb.png", color_img)
                 cv2.imwrite(dir_path + "raw_depth.png", raw_depth)
-                np.save(dir_path + "raw_depth.npy", raw_depth)
+                # np.save(dir_path + "raw_depth.npy", raw_depth)
                 cv2.imwrite(dir_path + "depth_heatmap.png", depth_heatmap)
                 cv2.imwrite(dir_path + "overlay_depth.png", overlay_heatmap)
 
