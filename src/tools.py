@@ -69,5 +69,49 @@ def crop_by_4_points(img, points):
 
     return cropped_img
 
+def visualize_rgb_depth_alignment(color_img, depth, alpha_rgb: float = 0.6, alpha_depth: float = 0.4):
+    """
+    Visualize the alignment between an RGB image and a depth map (array version, no saving).
+
+    Generates two visualizations:
+        1. Heatmap overlay (RGB + depth colormap)
+        2. Edge overlay (RGB edges vs. depth edges)
+
+    Args:
+        color_img (np.ndarray): BGR image, uint8, shape (H, W, 3)
+        depth (np.ndarray): Depth map in millimeters, uint16, shape (H, W)
+        alpha_rgb (float): Opacity of RGB layer in overlay (0–1)
+        alpha_depth (float): Opacity of depth heatmap in overlay (0–1)
+
+    Returns:
+        overlay_heatmap (np.ndarray): RGB + depth colormap visualization (uint8)
+        overlay_edges (np.ndarray): RGB-edge vs depth-edge visualization (uint8)
+    """
+
+    # Heatmap overlay
+    # Normalize depth to 0–255 and apply colormap
+    depth_vis = cv2.normalize(depth, None, 0, 255, cv2.NORM_MINMAX)
+    depth_vis = depth_vis.astype(np.uint8)
+    depth_color = cv2.applyColorMap(depth_vis, cv2.COLORMAP_JET)
+    # Blend RGB and heatmap
+    overlay_heatmap = cv2.addWeighted(color_img, alpha_rgb, depth_color, alpha_depth, 0)
+
+    # Edge overlay
+    # Compute RGB edges (white)
+    gray = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
+    edges_rgb = cv2.Canny(gray, 100, 200)
+    edges_rgb_colored = cv2.cvtColor(edges_rgb, cv2.COLOR_GRAY2BGR)
+
+    # Compute depth edges (red)
+    depth_abs = cv2.convertScaleAbs(depth, alpha=0.03)
+    edges_depth = cv2.Canny(depth_abs, 50, 150)
+    edges_depth_colored = cv2.cvtColor(edges_depth, cv2.COLOR_GRAY2BGR)
+    edges_depth_colored[:, :, 1:] = 0  # keep only red channel
+
+    # Combine RGB edges (white) and depth edges (red)
+    overlay_edges = cv2.addWeighted(edges_rgb_colored, 1, edges_depth_colored, 1, 0)
+
+    return overlay_heatmap, overlay_edges
+
 if __name__ == "__main__":
     img_mouse_click_xy(img_path="D:/overlay_heatmap.png")
