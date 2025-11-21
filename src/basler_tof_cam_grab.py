@@ -20,11 +20,13 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     print("ToF camera information:")
     # Operating mode: ShortRange: 0 - 1498 mm / LongRange: 0 - 9990 mm
     cam.OperatingMode.Value = "ShortRange"
+    # Exposure time (us)
+    cam.ExposureTime.Value = 50.0
     # Max depth / Min depth (mm)
     cam.DepthMax.Value = 1498
     cam.DepthMin.Value = 0
-    print(
-        f"Operating mode: {cam.OperatingMode.Value} / Depth max: {cam.DepthMax.Value} / min: {cam.DepthMin.Value}")
+    print(f"Operating mode: {cam.OperatingMode.Value} / Exposure time: {cam.ExposureTime.Value}\n")
+    print(f"Depth max: {cam.DepthMax.Value} / min: {cam.DepthMin.Value}")
     # Fast mode
     cam.FastMode.Value = True
     # Filter spatial
@@ -37,7 +39,7 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     # Outlier removal
     cam.OutlierRemoval.Value = True
     # Confidence Threshold (0 - 65536)
-    cam.ConfidenceThreshold.Value = 32
+    cam.ConfidenceThreshold.Value = 0
     print(f"Confidence threshold: {cam.ConfidenceThreshold.Value}")
     # Gamma correction
     cam.GammaCorrection.Value = True
