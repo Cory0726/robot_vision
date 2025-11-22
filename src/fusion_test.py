@@ -2,14 +2,17 @@ import cv2
 import numpy as np
 
 # 這三個值是用校正檔算出來的
+# s  = 0.64  # ≈ fx_tof / fx_rgb
+# tx = -31
+# ty = -116
 s  = 0.63  # ≈ fx_tof / fx_rgb
-tx = -39.99
-ty = -85.90
-
+tx = -26
+ty = -108
 # 讀圖
-rgb = cv2.imread("D:/Temp2/G_01_rgb.png")
-# depth = cv2.imread("D:/Temp2/G_01_depth_heatmap.png", -1)  # 只拿來決定畫布大小
-depth = cv2.imread("D:/Temp2/G_01_raw_depth.png", -1)
+rgb = cv2.imread("D:/Collect_test_data_2/G_06_rgb.png")
+# depth = cv2.imread("D:/Temp2/G_01_depth_heatmap.png", -1)
+# depth = cv2.imread("D:/Collect_test_data/G_03_depth_heatmap.png", -1)  # 只拿來決定畫布大小
+depth = cv2.imread("D:/Collect_test_data_2/G_06_raw_depth.png", -1)
 h_d, w_d = depth.shape[:2]
 
 # 建一個 2x3 仿射矩陣： [ s  0  tx
