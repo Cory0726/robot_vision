@@ -11,12 +11,25 @@ def capture_intensity_and_depth():
     cam = basler_tof_cam_grab.create_tof_cam()
     cam.Open()
     basler_tof_cam_grab.config_tof_cam_para(cam)
+    # ToF data configuration
+    # Open 3d point cloud image
+    cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Range")
+    cam.GetNodeMap().GetNode("ComponentEnable").SetValue(True)
+    cam.GetNodeMap().GetNode("PixelFormat").SetValue("Coord3D_ABC32f")
+    # Close intensity image
+    cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Intensity")
+    cam.GetNodeMap().GetNode("ComponentEnable").SetValue(True)
+    cam.GetNodeMap().GetNode("PixelFormat").SetValue("Mono16")
+    # Close confidence map
+    cam.GetNodeMap().GetNode("ComponentSelector").SetValue("Confidence")
+    cam.GetNodeMap().GetNode("ComponentEnable").SetValue(False)
+    cam.GetNodeMap().GetNode("PixelFormat").SetValue("Confidence16")
 
     # Starts the grabbing
     cam.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
     print("Start grabbing...")
     while cam.IsGrabbing():
-        # Get the grab retreve
+        # Get the grab retrieve
         grab_retrieve = cam.RetrieveResult(1000, pylon.TimeoutHandling_ThrowException)
 
         if grab_retrieve.GrabSucceeded():
