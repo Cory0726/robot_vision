@@ -21,7 +21,7 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     # Operating mode: ShortRange: 0 - 1498 mm / LongRange: 0 - 9990 mm
     cam.OperatingMode.Value = "LongRange"
     # Exposure time (us)
-    cam.ExposureTime.Value = 200.0
+    cam.ExposureTime.Value = 100.0
     # Max depth / Min depth (mm)
     cam.DepthMax.Value = 1498
     cam.DepthMin.Value = 0
@@ -49,6 +49,7 @@ def config_tof_cam_para(cam: pylon.InstantCamera) -> None:
     cam.GenDCStreamingMode.Value = "Off"
 
 def config_tof_data_comp(cam: pylon.InstantCamera, data_type: str) -> None:
+
     """
     Configure a ToF camera data container after opening the camera.
     Args:
