@@ -57,8 +57,8 @@ def capture_intensity_and_depth():
                 file_number += 1
                 intensity_file_path = f"robot_vision_result/M1_{file_number:02d}_intensity_image.png"
 
-            cv2.imwrite(intensity_file_path, intensity_image)
-            cv2.imwrite(f"robot_vision_result/M1_{file_number:02d}_raw_depth.png", raw_depth)
+            cv2.imwrite(intensity_file_path, intensity_image, cv2.IMREAD_GRAYSCALE)
+            cv2.imwrite(f"robot_vision_result/M1_{file_number:02d}_raw_depth.png", raw_depth.astype(np.uint16))
             np.save(f"robot_vision_result/M1_{file_number:02d}_raw_depth", raw_depth)
             cv2.imwrite(
                 f"robot_vision_result/M1_{file_number:02d}_depth_heatmap.png",
