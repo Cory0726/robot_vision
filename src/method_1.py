@@ -1,7 +1,7 @@
 import os
 
 import cv2
-
+import numpy as np
 import basler_tof_cam_grab
 from pypylon import pylon
 from tools import rawdepth_to_heatmap
@@ -52,13 +52,18 @@ def capture_intensity_and_depth():
             break
         elif key == ord("s"):
             file_number = 0
-            intensity_file_path = f"robot_vision_result/Intensity_image_{file_number:02d}.png"
+            intensity_file_path = f"robot_vision_result/M1_{file_number:02d}_intensity_image.png"
             while os.path.exists(intensity_file_path):
                 file_number += 1
-                intensity_file_path = f"robot_vision_result/Intensity_image_{file_number:02d}.png"
+                intensity_file_path = f"robot_vision_result/M1_{file_number:02d}_intensity_image.png"
 
             cv2.imwrite(intensity_file_path, intensity_image)
-            cv2.imwrite(f"robot_vision_result/raw_depth_{file_number:02d}.png", raw_depth)
+            cv2.imwrite(f"robot_vision_result/M1_{file_number:02d}_raw_depth.png", raw_depth)
+            np.save(f"robot_vision_result/M1_{file_number:02d}_raw_depth", raw_depth)
+            cv2.imwrite(
+                f"robot_vision_result/M1_{file_number:02d}_depth_heatmap.png",
+                rawdepth_to_heatmap(raw_depth)
+            )
 
             print(f"Saved complete")
 
