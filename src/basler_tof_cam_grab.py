@@ -216,4 +216,3 @@ def grab_one_intensity():
     assert grab_result.GrabSucceeded(), "Failed to grab intensity data"
     cam.Close()
     return split_tof_container_data(grab_result.GetDataContainer())["Intensity_Image"]
-

@@ -45,10 +45,13 @@ def capture_intensity_and_depth():
                 intensity_file_path = f"robot_vision_result/Intensity_image_{file_number:02d}.png"
 
             cv2.imwrite(intensity_file_path, intensity_image)
-            cv2.imwrite(f"robot_vision_result/raw_depth_{file_number:02d}.png")
+            cv2.imwrite(f"robot_vision_result/raw_depth_{file_number:02d}.png", raw_depth)
 
             print(f"Saved complete")
 
     cam.StopGrabbing()
     cam.Close()
     cv2.destroyAllWindows
+
+if __name__ == "__main__":
+    capture_intensity_and_depth()
