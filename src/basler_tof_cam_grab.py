@@ -151,7 +151,7 @@ def stream_tof_img(img_type: str) -> None:
         if grab_retrieve.GrabSucceeded():
             # Get the grab retrieve as data container
             data_container = grab_retrieve.GetDataContainer()
-            # Get the intensity image
+            # Split the container
             data = split_tof_container_data(data_container)
 
             if img_type == "Intensity_Image":
